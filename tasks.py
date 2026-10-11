@@ -102,14 +102,30 @@ def describe(task):
     return f"score {score}, {days_left(task['deadline'])} days left"
 
 
+
 def show_tasks(tasks):
-    """Prints the numbered list (give it the result of order_tasks)."""
+    """Prints the numbered list of tasks."""
+    print()
+    print("========== YOUR TASKS ==========")
+
     if len(tasks) == 0:
         print("No tasks yet.")
+        print("===============================")
+        return
+
     number = 1
     for task in tasks:
-        print(f"{number}. {task['title']} ({task['course']}) - {describe(task)}")
+        print()
+        print(f"{number}. {task['title']}")
+        print(f"   Course: {task['course']}")
+        print(f"   Deadline: {task['deadline']}")
+        print(f"   Difficulty: {task['difficulty']}")
+        print(f"   Status: {describe(task)}")
         number += 1
+
+    print()
+    print("================================")
+
 
 
 def show_details(task):

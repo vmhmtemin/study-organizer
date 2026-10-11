@@ -68,24 +68,34 @@ def pick_task(tasks):
     return ordered[number - 1]
 
 
+
 def add_task(tasks):
-    title = ask_title("Title: ")
+    print()
+    print("==============================")
+    print("        ADD A NEW TASK")
+    print("==============================")
+
+    title = ask_title("Task title: ")
     course = ask_choice(f"Course ({', '.join(COURSES)}): ", COURSES, "course")
     deadline = ask_date("Deadline (YYYY-MM-DD, example 2026-12-18): ")
     difficulty = ask_choice(f"Difficulty ({', '.join(DIFFICULTY)}): ", DIFFICULTY, "difficulty")
 
-    # optional: choose one of the files stored for this course
+    # Optional: choose a file for this course
     chosen_file = ""
     files = get_course_files(course)
+
     if len(files) > 0:
         for i in range(len(files)):
             print(f"{i + 1}. {files[i]}")
+
         number = ask_number("File number (0 = no file): ", 0, len(files))
+
         if number > 0:
             chosen_file = files[number - 1]
 
     tasks.append(new_task(title, course, deadline, difficulty, chosen_file))
     print("Task added!")
+
 
 
 def show_task_details(tasks):
@@ -117,8 +127,10 @@ def run_menu(tasks):
                 add_task(tasks)
             elif choice == 2:
                 show_tasks(order_tasks(tasks))
+                input("\nPress Enter to the main menu...")
             elif choice == 3:
                 show_task_details(tasks)
+                input("\nPress Enter to the main menu...")
             elif choice == 4:
                 mark_done(tasks)
             elif choice == 5:
@@ -135,9 +147,38 @@ def run_menu(tasks):
     print("Saved. Bye!")
 
 
+def show_welcome():
+    print("==============================")
+    print("       STUDY ORGANIZER")
+    print("==============================")
+    print("Welcome to Study Organizer!")
+    print("Organize your tasks and study materials.")
+    print()
+
+
+def login():
+    print("Please log in to continue.")
+
+    username = input("Username: ")
+    password = input("Password: ")
+
+    if username == "Efe" and password == "1234":
+        print("Login successful!")
+        print()
+        return True
+    else:
+        print("Incorrect username or password.")
+        return False
+
+
 def main():
     make_folders()
-    run_menu(load_tasks())
+    show_welcome()
+
+    if login():
+        run_menu(load_tasks())
+    else:
+        print("Access denied.")
 
 
 if __name__ == "__main__":
