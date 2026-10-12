@@ -1,48 +1,45 @@
-# Study Organizer
+# StudyCompass (Study Organizer)
 
-A small command-line program that ranks homework by priority and keeps study files
-(pdf, jpg, pptx, mp3 ...) sorted by course. Courses: `python`, `dsa`, `diffeq`.
+## Problem
+Students often struggle to manage multiple academic tasks, keep track of deadlines, and decide which tasks to complete first. A close, difficult task can easily be forgotten behind an easier one, and a missed deadline is usually noticed too late. Organizing study materials can also be time-consuming: slides, PDFs, photos and recordings pile up in one folder with random names, so finding the right file for the right course takes time. This makes it difficult to maintain an efficient and organized study routine.
 
-## Run
+## Solution
+StudyCompass is a task management and study material organization system.
+- **Tasks:** students add tasks with a title, course, deadline and difficulty level (easy, medium, hard).
+- **Priority:** every task gets a priority score, and the list is sorted so the most important task is always first.
+- **Deadlines:** the application tracks deadlines and shows the number of days remaining for each task. Overdue tasks are clearly marked as `OVERDUE`, so important deadlines are not missed.
+- **Study materials:** files dropped in `inbox/` are moved automatically into the right course folder (`materials/<course>/`), and a task can be linked to a file that opens with one command.
+
+Everything is managed in one place, which makes files easier to access and academic responsibilities easier to manage.
+
+## How to run
+Python 3 is needed. Open a terminal in the project folder, then:
 ```
 python main.py                  # menu
-python cli.py <command> ...     # one command, e.g. python cli.py list
+python cli.py <command> ...     # one command
 python cli.py -h                # help
 ```
 
-## Commands (cli.py)
-| Command | What it does |
-|---|---|
-| `add --title Lab 2 --course python --deadline 2026-12-18 --difficulty hard [--file name.pdf]` | add a task |
-| `list` | show tasks, most important first |
-| `details --number N` / `done --number N` / `open --number N` | show, finish, or open the file of task N (N = number from `list`) |
-| `import` | move files from `inbox/` to `materials/<course>/` |
-| `materials` | show the stored files |
-| `menu` | open the menu |
-
-Deadline format: `YYYY-MM-DD` (year-month-day). Difficulty: `easy`, `medium`, `hard`.
-Wrong input never crashes the program: it prints a warning (the menu asks again).
-
-## Files
-| File | Job |
-|---|---|
-| `main.py` | the menu |
-| `cli.py` | argparse commands |
-| `tasks.py` | task dictionary, input checks, showing tasks |
-| `priority.py` | days left, score, ordering |
-| `materials.py` | import, sort and open files |
-| `storage.py` | save / load `tasks.txt` |
-
+**Example:**
+```
+python cli.py add --title Lab 2 --course python --deadline 2026-12-18 --difficulty hard --file lab2.pdf
+python cli.py list              # tasks, most important first
+python cli.py details --number 1
+python cli.py import            # move files from inbox/ to materials/<course>/
+python cli.py materials         # show the stored files
+python cli.py open --number 1   # open the file of task 1
+python cli.py done --number 1   # mark task 1 as done
+```
+Task numbers come from `list`. After `done` the task moves to the end, so run `list` again.
 `inbox/`, `materials/` and `tasks.txt` are created automatically.
 
-## Priority score
-`score = difficulty points + urgency * 2` (easy 1, medium 3, hard 5).
-Days left = deadline - today. 0-1 days → urgency 5, 2-3 → 4, 4-7 → 3, 8-14 → 2, more → 1.
-Deadline passed → `OVERDUE` (no score). Same score → the closer deadline comes first.
+**Flow:** `add` checks the input and saves the task → `list` calculates days left and the score of every task and sorts them → `import` sorts new files into course folders → `open` finds the task's file and opens it.
 
-## Sorting files
-The course is found from words in the file name (`KEYWORDS` in `materials.py`), for example
-`coe203` → python, `dsa` or `swe209` → dsa, `math205` or `diffeq` → diffeq.
-No match → `materials/unsorted/`. Other file types are skipped, and files are never overwritten.
+## Logic
+- `score = difficulty points (easy 1, medium 3, hard 5) + urgency * 2`
+- Urgency from days left: 0-1 → 5, 2-3 → 4, 4-7 → 3, 8-14 → 2, more → 1. Passed deadline → `OVERDUE`.
+- Wrong input prints a warning instead of crashing.
+- No keyword match in a file name → `materials/unsorted/`. Files are never overwritten.
 
-Not from the slides: `datetime.date` (today's date), `os.startfile` / `os.system` (open a file).
+## Files
+`main.py` menu · `cli.py` commands · `tasks.py` tasks and checks · `priority.py` score · `materials.py` files · `storage.py` `tasks.txt`
