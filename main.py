@@ -13,6 +13,7 @@ MENU = [
     "4. Mark task as done",
     "5. Import files from inbox",
     "6. Show materials",
+    "7. Delete task",
     "0. Save and exit",
 ]
 
@@ -115,13 +116,32 @@ def mark_done(tasks):
         print("Done:", task["title"])
 
 
+        
+def delete_task(tasks):
+    task = pick_task(tasks)
+
+    if task is not None:
+        answer = ask_choice(
+            f"Delete '{task['title']}'? (y/n): ",
+            ["y", "n"],
+            "answer"
+        )
+
+        if answer == "y":
+            tasks.remove(task)
+            print("Task deleted!")
+        else:
+            print("Deletion cancelled.")
+
+
+
 def run_menu(tasks):
     try:
         while True:
             print()
             for line in MENU:
                 print(line)
-            choice = ask_number("Choose: ", 0, 6)
+            choice = ask_number("Choose: ", 0, 7)
 
             if choice == 1:
                 add_task(tasks)
@@ -141,7 +161,10 @@ def run_menu(tasks):
             elif choice == 6:
                 show_materials()
                 input("\nPress Enter to the main menu...")
-
+            elif choice == 7:
+                  delete_task(tasks)
+                  input("\nPress Enter to return to the main menu...")
+       
             save_tasks(tasks)                 # save after every action
             if choice == 0:
                 break
@@ -153,37 +176,117 @@ def run_menu(tasks):
 
 def show_welcome():
     print("==============================")
-    print("        STUDY ORGANIZER")
+    print("       STUDY ORGANIZER")
     print("==============================")
     print("Welcome to Study Organizer!")
     print("Organize your tasks and study materials.")
     print()
 
 
-def login():
-    print("Please log in to continue.")
 
-    username = input("Username: ")
-    password = input("Password: ")
+def register():
+    print()
+    print("========== CREATE ACCOUNT ==========")
 
-    if username == "Efe" and password == "1234":
-        print("Login successful!")
-        print()
-        return True
-    else:
-        print("Incorrect username or password.")
+    username = input("Create username: ").strip()
+    password = input("Create password: ").strip()
+
+    if username == "" or password == "":
+        print("Username and password cannot be empty.")
         return False
+
+    with open("users.txt", "a") as file:
+        file.write(username + "|" + password + "\n")
+
+    print("Account created successfully!")
+    return True
+
+
+def login():
+    print()
+    print("================================")
+    print("          USER LOGIN")
+    print("================================")
+
+    max_attempts = 4
+    attempts = 0
+
+    while attempts < max_attempts:
+        username = input("Username: ").strip()
+        password = input("Password: ").strip()
+
+        with open("users.txt", "a+") as file:
+            file.seek(0)
+            for line in file:
+                saved_username, saved_password = line.strip().split("|", 1)
+
+                if username == saved_username and password == saved_password:
+                    print()
+                    print("================================")
+                    print("       LOGIN SUCCESSFUL!")
+                    print("================================")
+                    return True
+
+        attempts += 1
+        remaining = max_attempts - attempts
+
+        print()
+        print("================================")
+        print("         LOGIN FAILED")
+        print("================================")
+        print("Incorrect username or password.")
+
+        if remaining > 0:
+            print("Attempts remaining:", remaining)
+            print("Please try again.")
+        else:
+            print("You have used all login attempts.")
+            print("Returning to account menu.")
+
+        print("================================")
+        print()
+
+    return False
+
+
+
+def account_menu():
+    while True:
+        print()
+        print("1. Sign up")
+        print("2. Log in")
+        print("0. Exit")
+
+        choice = input("Choose: ").strip()
+
+        if choice == "1":
+            register()
+        elif choice == "2":
+            if login():
+                return True
+        elif choice == "0":
+            return False
+        else:
+            print("Invalid choice.")
+
+
 
 
 def main():
     make_folders()
     show_welcome()
 
-    if login():
+    if account_menu():
         run_menu(load_tasks())
     else:
-        print("Access denied.")
+        print("Goodbye!")
+
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("\n\nProgram interrupted by user.")
+        print("Goodbye!")
+
