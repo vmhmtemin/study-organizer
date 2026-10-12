@@ -19,6 +19,11 @@ python main.py                  # menu
 python cli.py <command> ...     # one command
 python cli.py -h                # help
 ```
+## Uploading Files
+1. Copy your study materials into the `inbox` folder.
+2. Run `py cli.py import` to import the files.
+3. Run `py cli.py materials` to view your uploaded materials.
+
 
 **Example:**
 ```
