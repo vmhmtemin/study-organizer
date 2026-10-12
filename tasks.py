@@ -56,7 +56,7 @@ def check_number(text, smallest, biggest):
 
 
 def check_date(text):
-    hint = "Use the format YYYY-MM-DD (year-month-day), for example 2026-12-18."
+    hint = "Use the format YYYY-MM-DD (year-month-day)"
     if text == "":
         return "Deadline is required. " + hint
     if len(text) != 10 or text[4] != "-" or text[7] != "-":

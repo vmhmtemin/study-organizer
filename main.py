@@ -252,7 +252,7 @@ def login():
 
 def account_menu():
     while True:
-        print()
+        
         print("1.Sign up")
         print("2.Log in")
         print("0.Exit")
