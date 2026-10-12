@@ -1,18 +1,15 @@
-# Contributions of Member 4
-
-(Rename this file to NAME_SURNAME_STUDENTID_GITHUBUSERNAME.md and delete this line.)
-
-Name:
-Student ID:
-GitHub username:
+# Member 4
+Name: Cevahir Esma Morina
+Student ID: 2409111019
+GitHub username: emoriina
 
 ## My files
-materials.py
+tasks.py
 
 ## My functions
 make_folders, safe_name, get_type, find_course, import_files, get_course_files, show_materials, open_file
 
-## What I did (in my own words)
+## What I did
 
 
 ## Class topics I used
