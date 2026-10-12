@@ -149,7 +149,7 @@ def run_menu(tasks):
 
 def show_welcome():
     print("==============================")
-    print("        STUDY COMPASS")
+    print("       STUDY COMPASS")
     print("==============================")
     print("Welcome to Study Compass!")
     print("Organize your tasks and study materials.")
@@ -157,7 +157,8 @@ def show_welcome():
 
 
 def login():
-    print("Please log in to continue.")
+    print("Please l
+    ,og in to continue.")
 
     username = input("Username: ")
     password = input("Password: ")
