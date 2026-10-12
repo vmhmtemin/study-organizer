@@ -1,18 +1,15 @@
-# Contributions of Member 2
-
-(Rename this file to NAME_SURNAME_STUDENTID_GITHUBUSERNAME.md and delete this line.)
-
-Name:
-Student ID:
-GitHub username:
+# Member 2
+Name: Pelin Aslantaş
+Student ID:  2409111030
+GitHub username: pelinaslnts
 
 ## My files
-tasks.py
+storage.py
 
 ## My functions
 new_task, check_title, check_choice, check_number, check_date, check_file, check_task, describe, show_tasks, show_details
 
-## What I did (in my own words)
+## What I did
 
 
 ## Class topics I used

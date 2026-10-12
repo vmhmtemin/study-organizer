@@ -1,18 +1,15 @@
-# Contributions of Member 5
-
-(Rename this file to NAME_SURNAME_STUDENTID_GITHUBUSERNAME.md and delete this line.)
-
-Name:
-Student ID:
-GitHub username:
+# Member 5
+Name: Mehmet Emin Soyal
+Student ID: 2509111011
+GitHub username: vmhmtemin
 
 ## My files
-priority.py and README.md
+materials.py 
 
 ## My functions
 days_left, get_score, is_better, order_tasks, README.md
 
-## What I did (in my own words)
+## What I did
 
 
 ## Class topics I used
