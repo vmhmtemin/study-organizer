@@ -61,28 +61,53 @@ def find_course(filename):
     return "unsorted"
 
 
+
 def import_files():
-    """Moves the accepted files of inbox/ into materials/<course>/."""
+    """Moves accepted files from inbox to the correct folder."""
     make_folders()
-    for filename in sorted(os.listdir("inbox")):          # sorted: same order every time
+
+    print()
+    print("========== IMPORT FILES ==========")
+
+    filenames = sorted(os.listdir("inbox"))
+
+    if len(filenames) == 0:
+        print("Inbox is empty!")
+        print("Put your files inside the inbox folder.")
+        return
+
+    moved = 0
+
+    for filename in filenames:
         source = os.path.join("inbox", filename)
-        if not os.path.isfile(source):                    # skip folders
+
+        if not os.path.isfile(source):
             continue
+
         if not safe_name(filename):
-            print("Skipped (unsafe characters in the name):", filename)
+            print("Skipped (unsafe file name):", filename)
             continue
+
         if get_type(filename) == "":
-            print("Skipped (file type not accepted):", filename)
+            print("Skipped (unsupported file type):", filename)
             continue
 
         course = find_course(filename)
         destination = os.path.join("materials", course, filename)
-        if os.path.lexists(destination):                  # never overwrite a file
-            print("Skipped (already exists):", filename)
+
+        if os.path.lexists(destination):
+            print("Skipped (file already exists):", filename)
             continue
 
         shutil.move(source, destination)
-        print(f"Moved {filename} -> {course}")
+        print("Imported:", filename)
+        print("Course:", course)
+        moved += 1
+
+    print("----------------------------------")
+    print("Files imported:", moved)
+    print("==================================")
+
 
 
 def get_course_files(course):

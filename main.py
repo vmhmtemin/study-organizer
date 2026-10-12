@@ -133,10 +133,14 @@ def run_menu(tasks):
                 input("\nPress Enter to the main menu...")
             elif choice == 4:
                 mark_done(tasks)
+                input("\nPress Enter to the main menu...")
             elif choice == 5:
-                import_files()
+                    print("TEST: OPTION 5 SELECTED")
+                    import_files()
+                    input("\nPress Enter to return to the main menu...")
             elif choice == 6:
                 show_materials()
+                input("\nPress Enter to the main menu...")
 
             save_tasks(tasks)                 # save after every action
             if choice == 0:
@@ -149,16 +153,15 @@ def run_menu(tasks):
 
 def show_welcome():
     print("==============================")
-    print("       STUDY COMPASS")
+    print("       STUDY ORGANIZER")
     print("==============================")
-    print("Welcome to Study Compass!")
+    print("Welcome to Study Organizer!")
     print("Organize your tasks and study materials.")
     print()
 
 
 def login():
-    print("Please l
-    ,og in to continue.")
+    print("Please log in to continue.")
 
     username = input("Username: ")
     password = input("Password: ")
