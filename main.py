@@ -153,7 +153,7 @@ def run_menu(tasks):
 
 def show_welcome():
     print("==============================")
-    print("       STUDY ORGANIZER")
+    print("        STUDY ORGANIZER")
     print("==============================")
     print("Welcome to Study Organizer!")
     print("Organize your tasks and study materials.")
