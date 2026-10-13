@@ -1,14 +1,14 @@
-
-# score = difficulty points + urgency * 2
+# priority.py - which task is the most important?
+# score = difficulty points + urgency * 2   (highest score first)
 from datetime import date     # date.today() gives today's date
 
-DIFFICULTY = {"easy": 1, "medium": 3, "hard": 5} # store the points for each difficulty level
+DIFFICULTY = {"easy": 1, "medium": 3, "hard": 5}
 
 
 def days_left(deadline):
     """Days from today until the deadline ("2026-12-18"). Negative = already passed."""
-    # fromisoformat() converts a date string (YYYY-MM-DD) into a date object
-    return (date.fromisoformat(deadline) - date.today()).days  # deadline - date of today
+    # fromisoformat turns the text "2026-12-18" into a date, then date - date = days
+    return (date.fromisoformat(deadline) - date.today()).days
 
 
 def get_score(task):
@@ -26,20 +26,18 @@ def get_score(task):
         urgency = 2
     else:
         urgency = 1
-    return DIFFICULTY[task["difficulty"]] + urgency * 2   
-# determine task priority using the difficulty and urgency scores
+    return DIFFICULTY[task["difficulty"]] + urgency * 2
 
 
 def is_better(task, other):
-
+    """True if task is more important than other (higher score, or same score and closer deadline)."""
     if get_score(task) != get_score(other):
         return get_score(task) > get_score(other)
     return days_left(task["deadline"]) < days_left(other["deadline"])
-# compare the priority scores of the two tasks
 
 
 def order_tasks(tasks):
-
+    """Returns the tasks: waiting tasks (best first), then overdue, then done."""
     waiting = []
     late = []
     finished = []
@@ -50,14 +48,13 @@ def order_tasks(tasks):
             late.append(task)
         else:
             waiting.append(task)
-    # categorize each task based on its status and deadline
 
-    # sorting the long way: take the best task out of `waiting`, again and again.
+    # Sorting the long way: take the best task out of `waiting`, again and again.
     ordered = []
     while len(waiting) > 0:
         best = waiting[0]
         for task in waiting:
-            if is_better(task, best):    # find the highest-priority task in the waiting list
+            if is_better(task, best):
                 best = task
         ordered.append(best)
         waiting.remove(best)

@@ -82,8 +82,12 @@ def import_files():
         source = os.path.join("inbox", filename)
 
         if not os.path.isfile(source):
+            print("Skipped (symobolic link):", filename)
             continue
 
+        if not os.path.istifle(source):
+            continue
+    
         if not safe_name(filename):
             print("Skipped (unsafe file name):", filename)
             continue
@@ -99,10 +103,19 @@ def import_files():
             print("Skipped (file already exists):", filename)
             continue
 
-        shutil.move(source, destination)
-        print("Imported:", filename)
-        print("Course:", course)
-        moved += 1
+        
+        try:
+             shutil.move(source, destination)
+             print("Imported:", filename)
+             print("Course:", course)
+             moved += 1
+        except FileNotFoundError:
+             print("Skipped (file no longer exists):", filename)
+        except PermissionError:
+             print("Skipped (permission denied):", filename)
+        except OSError as error:
+             print("Could not import", filename, ":", error)
+
 
     print("----------------------------------")
     print("Files imported:", moved)
@@ -134,17 +147,23 @@ def show_materials():
     show_course("unsorted", "Unsorted")
 
 
-def open_file(course, filename):
-    """Opens a file of the course folder with the default program of the computer."""
-    # only names that are really in the folder are opened
+def show_file(course, filename):
+    """Shows the file path and size."""
     if filename not in get_course_files(course):
         print("File not found:", filename)
         return
+
     path = os.path.join("materials", course, filename)
-    if os.name == "nt":
-        os.startfile(path)                    # Windows
-    else:
-        os.system(f'open "{path}"')           # Mac
+
+    try:
+        size = os.path.getsize(path)
+        print("File:", filename)
+        print("Path:", path)
+        print("Size:", size, "bytes")
+    except FileNotFoundError:
+        print("File no longer exists:", filename)
+    except PermissionError:
+        print("Permission denied:", filename)
 
 
 if __name__ == "__main__":
