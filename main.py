@@ -5,7 +5,7 @@ from priority import DIFFICULTY, order_tasks
 from storage import load_tasks, save_tasks
 from tasks import (check_choice, check_date, check_number, check_title,
                    new_task, show_details, show_tasks)
-from accounts import check_password, hash_password
+from accounts import MIN_PASSWORD_LENGTH, check_password, hash_password
 
 MENU = [
     "1. Add task",
@@ -187,6 +187,14 @@ def show_welcome():
 def register():
     print()
     print("========== CREATE ACCOUNT ==========")
+    # show the rules before the user types, so they know what is accepted
+    print("Username rules:")
+    print("  - cannot be empty, cannot contain |")
+    print("Password rules:")
+    print(f"  - at least {MIN_PASSWORD_LENGTH} characters")
+    print("  - must contain both letters and numbers")
+    print("  - cannot contain |")
+    print("====================================")
 
     users = load_users()
     username = input("Create username: ").strip()
