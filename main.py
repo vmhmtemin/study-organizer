@@ -154,8 +154,7 @@ def run_menu(tasks):
             elif choice == 4:
                 mark_done(tasks)
                 input("\nPress Enter to the main menu...")
-            elif choice == 5:
-                    print("TEST: OPTION 5 SELECTED")
+            elif choice == 5:                    
                     import_files()
                     input("\nPress Enter to return to the main menu...")
             elif choice == 6:
