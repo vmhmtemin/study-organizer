@@ -5,6 +5,7 @@ from priority import DIFFICULTY, order_tasks
 from storage import load_tasks, save_tasks
 from tasks import (check_choice, check_date, check_number, check_title,
                    new_task, show_details, show_tasks)
+from accounts import check_password, hash_password
 
 MENU = [
     "1. Add task",
@@ -198,13 +199,18 @@ def register():
     if "|" in username or "|" in password:
         print("The character | cannot be used.")
         return False
+    
+    problem = check_password(password)
+    if problem != "":
+        print(problem)
+        return False
 
     if username in users:
         print("This username already exists.")
         return False
 
     with open("users.txt", "a", encoding="utf-8") as file:
-        file.write(username + "|" + password + "\n")
+        file.write(username + "|" + str(hash_password(username, password)) + "\n")
 
     print("Account created successfully!")
     return True
@@ -229,7 +235,7 @@ def login():
         username = input("Username: ").strip()
         password = input("Password: ").strip()
 
-        if username in users and users[username] == password:
+        if username in users and users[username] == str(hash_password(username, password)):
             print()
             print("================================")
             print("        LOGIN SUCCESSFUL!")
