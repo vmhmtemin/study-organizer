@@ -151,18 +151,18 @@ def run_menu(tasks):
             elif choice == 3:
                 show_task_details(tasks)
                 input("\nPress Enter to the main menu...")
-            elif choice == 4:
+            elif choice == 4:   
                 mark_done(tasks)
                 input("\nPress Enter to the main menu...")
-            elif choice == 5:                    
-                    import_files()
-                    input("\nPress Enter to return to the main menu...")
+            elif choice == 5:
+                import_files()
+                input("\nPress Enter to return to the main menu...")
             elif choice == 6:
                 show_materials()
                 input("\nPress Enter to the main menu...")
             elif choice == 7:
-                  delete_task(tasks)
-                  input("\nPress Enter to return to the main menu...")
+                delete_task(tasks)
+                input("\nPress Enter to return to the main menu...")
        
             save_tasks(tasks)                 # save after every action
             if choice == 0:
@@ -170,14 +170,14 @@ def run_menu(tasks):
     except (EOFError, KeyboardInterrupt):     # Ctrl+C / Ctrl+D: leave without an error text
         print("\nSaving and exiting...")
         save_tasks(tasks)
-    print("Successfully saved!")
+    print("Saved. Bye!")
 
 
 def show_welcome():
     print("==============================")
-    print("        STUDY COMPASS")
+    print("       STUDY ORGANIZER")
     print("==============================")
-    print("Welcome to Study Compass!")
+    print("Welcome to Study Organizer!")
     print("Organize your tasks and study materials.")
     print()
 
@@ -187,6 +187,7 @@ def register():
     print()
     print("========== CREATE ACCOUNT ==========")
 
+    users = load_users()
     username = input("Create username: ").strip()
     password = input("Create password: ").strip()
 
@@ -194,7 +195,15 @@ def register():
         print("Username and password cannot be empty.")
         return False
 
-    with open("users.txt", "a") as file:
+    if "|" in username or "|" in password:
+        print("The character | cannot be used.")
+        return False
+
+    if username in users:
+        print("This username already exists.")
+        return False
+
+    with open("users.txt", "a", encoding="utf-8") as file:
         file.write(username + "|" + password + "\n")
 
     print("Account created successfully!")
@@ -204,34 +213,35 @@ def register():
 def login():
     print()
     print("================================")
-    print("          USER LOGIN")
+    print("            USER LOGIN")
     print("================================")
 
+    users = load_users()
     max_attempts = 4
     attempts = 0
+
+    if len(users) == 0:
+        print("No registered accounts found.")
+        print("Please create an account first.")
+        return False
 
     while attempts < max_attempts:
         username = input("Username: ").strip()
         password = input("Password: ").strip()
 
-        with open("users.txt", "a+") as file:
-            file.seek(0)
-            for line in file:
-                saved_username, saved_password = line.strip().split("|", 1)
-
-                if username == saved_username and password == saved_password:
-                    print()
-                    print("================================")
-                    print("       LOGIN SUCCESSFUL!")
-                    print("================================")
-                    return True
+        if username in users and users[username] == password:
+            print()
+            print("================================")
+            print("        LOGIN SUCCESSFUL!")
+            print("================================")
+            return True
 
         attempts += 1
         remaining = max_attempts - attempts
 
         print()
         print("================================")
-        print("         LOGIN FAILED")
+        print("          LOGIN FAILED")
         print("================================")
         print("Incorrect username or password.")
 
@@ -243,18 +253,45 @@ def login():
             print("Returning to account menu.")
 
         print("================================")
-        print()
 
     return False
 
 
 
+def load_users():
+    users = {}
+
+    try:
+        with open("users.txt", "r", encoding="utf-8") as file:
+            for line in file:
+                parts = line.rstrip("\r\n").split("|")
+
+                if len(parts) == 2:
+                    username = parts[0]
+                    password = parts[1]
+
+                    if username != "" and password != "":
+                        users[username] = password
+
+    except FileNotFoundError:
+        pass
+
+    return users
+
+
+
+
+
 def account_menu():
     while True:
-        
-        print("1.Sign up")
-        print("2.Log in")
-        print("0.Exit")
+        print()
+        print("================================")
+        print("       STUDY ORGANIZER")
+        print("================================")
+        print("1. Sign up")
+        print("2. Log in")
+        print("0. Exit")
+        print("================================")
 
         choice = input("Choose: ").strip()
 
@@ -266,7 +303,7 @@ def account_menu():
         elif choice == "0":
             return False
         else:
-            print("Invalid choice.")
+            print("Invalid choice. Please select 1, 2 or 0.")
 
 
 

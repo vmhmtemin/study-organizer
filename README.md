@@ -19,11 +19,6 @@ python main.py                  # menu
 python cli.py <command> ...     # one command
 python cli.py -h                # help
 ```
-## Uploading Files
-1. Copy your study materials into the `inbox` folder.
-2. Run `py cli.py import` to import the files.
-3. Run `py cli.py materials` to view your uploaded materials.
-
 
 **Example:**
 ```
@@ -34,17 +29,53 @@ python cli.py import            # move files from inbox/ to materials/<course>/
 python cli.py materials         # show the stored files
 python cli.py open --number 1   # open the file of task 1
 python cli.py done --number 1   # mark task 1 as done
+python cli.py open --number 1  # show the linked file's path and size
 ```
 Task numbers come from `list`. After `done` the task moves to the end, so run `list` again.
 `inbox/`, `materials/` and `tasks.txt` are created automatically.
 
 **Flow:** `add` checks the input and saves the task → `list` calculates days left and the score of every task and sorts them → `import` sorts new files into course folders → `open` finds the task's file and opens it.
 
+## First run and login
+
+Run the application from the project folder:
+
+    python main.py
+
+On the first run, choose **Sign up** to create an account.
+After registration, choose **Log in** and enter your credentials.
+The task menu opens after a successful login.
+
+The command-line interface is separate:
+
+    python cli.py <command> ...
+
+`python cli.py menu` opens the task menu directly and does not use
+the login flow in `main.py`.
+
+
 ## Logic
 - `score = difficulty points (easy 1, medium 3, hard 5) + urgency * 2`
 - Urgency from days left: 0-1 → 5, 2-3 → 4, 4-7 → 3, 8-14 → 2, more → 1. Passed deadline → `OVERDUE`.
 - Wrong input prints a warning instead of crashing.
 - No keyword match in a file name → `materials/unsorted/`. Files are never overwritten.
+- File names are checked against course keywords in order.
+  The first matching keyword determines the course.
+- If no keyword matches, the file goes to `materials/unsorted/`.
+- `show_file` displays the file path and size; it does not open the file.
+
 
 ## Files
 `main.py` menu · `cli.py` commands · `tasks.py` tasks and checks · `priority.py` score · `materials.py` files · `storage.py` `tasks.txt`
+
+
+## Project folders and files
+
+- `inbox/`: place new study files here before importing them.
+- `materials/`: stores imported files in course folders.
+- `contributions/`: project contributions or contribution guidelines,
+  if included in the repository.
+- `tasks.txt`: local task data; generated automatically.
+- `users.txt`: local account data; should not be committed to Git.
+- `__pycache__/`: Python-generated cache files; ignored by Git.
+
