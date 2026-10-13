@@ -55,13 +55,12 @@ def main():
 
     parser = argparse.ArgumentParser(description="Study Organizer")
     parser.add_argument("command", choices=COMMANDS, help="what to do")
-    parser.add_argument("--number", help="task number from 'list' (details, done, open)")
+    parser.add_argument("--number", help="task number from 'list' (details, done, delete, open)")
     parser.add_argument("--title", nargs="+", help="task title, several words are fine (add)")
     parser.add_argument("--course", help="python, dsa or diffeq (add)")
     parser.add_argument("--deadline", help="YYYY-MM-DD, example 2026-12-18 (add)")
     parser.add_argument("--difficulty", help="easy, medium or hard (add)")
     parser.add_argument("--file", help="name of a file in materials/<course>/ (add, optional)")
-    parser.add_argument("--number", help= "task number form 'list' (details, done, delete, open)")
     args = parser.parse_args()
 
     tasks = load_tasks()

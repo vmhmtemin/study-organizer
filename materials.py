@@ -166,6 +166,19 @@ def show_file(course, filename):
         print("Permission denied:", filename)
 
 
+
+def open_file(course, filename):
+    """Opens a file of the course folder with the default program of the computer."""
+    # only names that are really in the folder are opened
+    if filename not in get_course_files(course):
+        print("File not found:", filename)
+        return
+    path = os.path.join("materials", course, filename)
+    if os.name == "nt":
+        os.startfile(path)                    # Windows
+    else:
+        os.system(f'open "{path}"')           # Mac
+
 if __name__ == "__main__":
     print(find_course("COE203_Advanced_Python_W2.pdf"))   # python
     print(find_course("DSA-week4.pptx"))                  # dsa
