@@ -7,12 +7,12 @@ import argparse
 
 from main import account_menu, run_menu
 from materials import import_files, make_folders, show_file, show_materials
-from priority import order_tasks
+from priority import order_tasks                 # import the necessary modules and functions from other files in the project
 from storage import load_tasks, save_tasks
 from tasks import (check_file, check_number, check_task, new_task,
                    show_details, show_tasks)
 
-COMMANDS = ["add", "list", "details", "done", "delete", "open", "import", "materials", "menu"]
+COMMANDS = ["add", "list", "details", "done", "delete", "open", "import", "materials", "menu"]  # store all available commands in a list
 
 
 def get_task(tasks, text):
@@ -26,26 +26,27 @@ def get_task(tasks, text):
         print("Error:", problem)
         return None
     return ordered[int(text) - 1]
+# find a task by its number after checking that the number is valid
 
 
 def add_command(args, tasks):
     # nargs="+" gives a list of words, join() puts them back together: Lab 2
     title = ""
     if args.title:
-        title = " ".join(args.title).strip()
+        title = " ".join(args.title).strip()    # get the task title and combine multiple words into one string
     course = (args.course or "").strip().lower()
     deadline = (args.deadline or "").strip()
     difficulty = (args.difficulty or "").strip().lower()
-    file = (args.file or "").strip()
+    file = (args.file or "").strip()               # get the course, deadline, difficulty and optional file information
 
     problem = check_task(title, course, deadline, difficulty)
     if problem == "" and course != "":
-        problem = check_file(course, file)
+        problem = check_file(course, file)     # check the task information
     if problem != "":
-        print("Error:", problem)
+        print("Error:", problem)      # display an error message and stop if the information is invalid
         return
 
-    tasks.append(new_task(title, course, deadline, difficulty, file))
+    tasks.append(new_task(title, course, deadline, difficulty, file)) # add it to the list and save the updated tasks
     save_tasks(tasks)
     print("Task added:", title)
 
@@ -53,7 +54,9 @@ def add_command(args, tasks):
 def main():
     make_folders()
 
+    # Create a parser to handle commands and options
     parser = argparse.ArgumentParser(description="Study Organizer")
+    # Define the available command and its options
     parser.add_argument("command", choices=COMMANDS, help="what to do")
     parser.add_argument("--number", help="task number from 'list' (details, done, delete, open)")
     parser.add_argument("--title", nargs="+", help="task title, several words are fine (add)")
@@ -63,8 +66,9 @@ def main():
     parser.add_argument("--file", help="name of a file in materials/<course>/ (add, optional)")
     args = parser.parse_args()
 
-    tasks = load_tasks()
+    tasks = load_tasks() # read the arguments entered by the user
 
+    # Execute the appropriate function based on the selected command
     if args.command == "menu":
         if account_menu():                # the menu needs a login, like main.py
             run_menu(tasks)
@@ -107,4 +111,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    main()        # run main() only when this file is executed directly

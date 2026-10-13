@@ -21,6 +21,11 @@ python cli.py -h                # help
 ```
 On a Mac, use `python3` instead of `python`.
 
+## Uploading Files
+1. Copy your study materials into the `inbox` folder.
+2. Run `python cli.py import` to import the files.
+3. Run `python cli.py materials` to view your uploaded materials.
+
 **Example:**
 ```
 python cli.py add --title Lab 2 --course python --deadline 2026-12-18 --difficulty hard --file lab2.pdf

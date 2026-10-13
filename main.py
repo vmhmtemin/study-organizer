@@ -171,14 +171,14 @@ def run_menu(tasks):
     except (EOFError, KeyboardInterrupt):     # Ctrl+C / Ctrl+D: leave without an error text
         print("\nSaving and exiting...")
         save_tasks(tasks)
-    print("Saved. Bye!")
+    print("Successfully saved!")
 
 
 def show_welcome():
     print("==============================")
-    print("       STUDY ORGANIZER")
+    print("        STUDY COMPASS")
     print("==============================")
-    print("Welcome to Study Organizer!")
+    print("Welcome to Study Compass!")
     print("Organize your tasks and study materials.")
     print()
 
@@ -292,7 +292,7 @@ def account_menu():
     while True:
         print()
         print("================================")
-        print("       STUDY ORGANIZER")
+        print("        STUDY COMPASS")
         print("================================")
         print("1. Sign up")
         print("2. Log in")
