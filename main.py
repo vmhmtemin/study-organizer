@@ -1,4 +1,4 @@
-# main.py - the menu (run it with: python main.py)
+# main.py - sign up, login and the task menu (run it with: python main.py)
 from materials import (COURSES, get_course_files, import_files,
                        make_folders, open_file, show_materials)
 from priority import DIFFICULTY, order_tasks
@@ -152,7 +152,7 @@ def run_menu(tasks):
             elif choice == 3:
                 show_task_details(tasks)
                 input("\nPress Enter to the main menu...")
-            elif choice == 4:   
+            elif choice == 4:
                 mark_done(tasks)
                 input("\nPress Enter to the main menu...")
             elif choice == 5:
@@ -164,7 +164,7 @@ def run_menu(tasks):
             elif choice == 7:
                 delete_task(tasks)
                 input("\nPress Enter to return to the main menu...")
-       
+
             save_tasks(tasks)                 # save after every action
             if choice == 0:
                 break

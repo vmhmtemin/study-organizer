@@ -5,7 +5,7 @@
 #   python cli.py details --number 1
 import argparse
 
-from main import run_menu
+from main import account_menu, run_menu
 from materials import import_files, make_folders, show_file, show_materials
 from priority import order_tasks
 from storage import load_tasks, save_tasks
@@ -66,7 +66,8 @@ def main():
     tasks = load_tasks()
 
     if args.command == "menu":
-        run_menu(tasks)
+        if account_menu():                # the menu needs a login, like main.py
+            run_menu(tasks)
     elif args.command == "add":
         add_command(args, tasks)
     elif args.command == "list":

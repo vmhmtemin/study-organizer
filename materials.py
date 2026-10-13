@@ -1,7 +1,8 @@
-# materials.py - move files from inbox/ to materials/<course>/ and open them
-import os
-import shutil
+# materials.py - move files from inbox/ to materials/<course>/, list them and open them
+import os        # folders, paths and file checks
+import shutil    # moving files
 
+# course code -> full course name (shown to the user)
 COURSES = {
     "python": "Advanced Python",
     "dsa": "Data Structures and Algorithms",
@@ -9,6 +10,7 @@ COURSES = {
 }
 
 # words that can appear in a file name (lower case) -> course
+# the first course with a matching word wins
 KEYWORDS = {
     "python": ["python", "coe203"],
     "dsa": ["data structure", "data_structure", "data-structure", "swe209", "dsa", "algorithm"],
@@ -28,6 +30,7 @@ BAD_CHARACTERS = '|"$`\\;&<>*?\t\r\n'
 
 
 def make_folders():
+    """Creates inbox/ and one folder per course inside materials/ (if they are missing)."""
     os.makedirs("inbox", exist_ok=True)       # exist_ok=True: no error if it already exists
     for course in COURSES:
         os.makedirs(os.path.join("materials", course), exist_ok=True)
@@ -44,7 +47,7 @@ def safe_name(filename):
 
 def get_type(filename):
     """Label of the file type ("Documents" ...), or "" if the type is not accepted."""
-    name = filename.lower()
+    name = filename.lower()                   # "Photo.JPG" is treated like "photo.jpg"
     for extension in FILE_TYPES:
         if name.endswith("." + extension):    # endswith: does the name finish with ".pdf"?
             return FILE_TYPES[extension]
@@ -56,38 +59,38 @@ def find_course(filename):
     name = filename.lower()
     for course in KEYWORDS:
         for word in KEYWORDS[course]:
-            if word in name:
+            if word in name:                  # "coe203" in "coe203_week4.pdf" -> True
                 return course
     return "unsorted"
 
 
-
 def import_files():
-    """Moves accepted files from inbox to the correct folder."""
+    """Moves accepted files from inbox to the correct course folder."""
     make_folders()
 
     print()
     print("========== IMPORT FILES ==========")
 
-    filenames = sorted(os.listdir("inbox"))
+    filenames = sorted(os.listdir("inbox"))   # sorted: always the same, alphabetical order
 
     if len(filenames) == 0:
         print("Inbox is empty!")
         print("Put your files inside the inbox folder.")
         return
 
-    moved = 0
+    moved = 0                                 # counts the imported files
 
     for filename in filenames:
         source = os.path.join("inbox", filename)
 
-        if not os.path.isfile(source):
-            print("Skipped (symobolic link):", filename)
+        # each check skips the file and goes on with the next one (continue)
+        if os.path.islink(source):
+            print("Skipped (symbolic link):", filename)
             continue
 
-        if not os.path.istifle(source):
+        if not os.path.isfile(source):        # folders inside inbox are ignored
             continue
-    
+
         if not safe_name(filename):
             print("Skipped (unsafe file name):", filename)
             continue
@@ -99,28 +102,25 @@ def import_files():
         course = find_course(filename)
         destination = os.path.join("materials", course, filename)
 
-        if os.path.lexists(destination):
+        if os.path.lexists(destination):      # never overwrite a file that is already there
             print("Skipped (file already exists):", filename)
             continue
 
-        
         try:
-             shutil.move(source, destination)
-             print("Imported:", filename)
-             print("Course:", course)
-             moved += 1
-        except FileNotFoundError:
-             print("Skipped (file no longer exists):", filename)
-        except PermissionError:
-             print("Skipped (permission denied):", filename)
-        except OSError as error:
-             print("Could not import", filename, ":", error)
-
+            shutil.move(source, destination)
+            print("Imported:", filename)
+            print("Course:", course)
+            moved += 1
+        except FileNotFoundError:             # the file was removed while we were working
+            print("Skipped (file no longer exists):", filename)
+        except PermissionError:               # the computer does not allow moving it
+            print("Skipped (permission denied):", filename)
+        except OSError as error:              # any other problem with the file system
+            print("Could not import", filename, ":", error)
 
     print("----------------------------------")
     print("Files imported:", moved)
     print("==================================")
-
 
 
 def get_course_files(course):
@@ -130,25 +130,28 @@ def get_course_files(course):
     if os.path.isdir(folder):
         for filename in sorted(os.listdir(folder)):
             if os.path.isfile(os.path.join(folder, filename)):
+                # only real files with an accepted type and a safe name are listed
                 if get_type(filename) != "" and safe_name(filename):
                     names.append(filename)
     return names
 
 
 def show_course(course, title):
+    """Prints the files of one course with their type label."""
     print("\n" + title)
     for filename in get_course_files(course):
         print(f"  - {filename} [{get_type(filename)}]")
 
 
 def show_materials():
+    """Prints the files of every course, and then the unsorted files."""
     for course in COURSES:
         show_course(course, COURSES[course])
     show_course("unsorted", "Unsorted")
 
 
 def show_file(course, filename):
-    """Shows the file path and size."""
+    """Shows the path and size of a file (used by 'python cli.py open')."""
     if filename not in get_course_files(course):
         print("File not found:", filename)
         return
@@ -156,7 +159,7 @@ def show_file(course, filename):
     path = os.path.join("materials", course, filename)
 
     try:
-        size = os.path.getsize(path)
+        size = os.path.getsize(path)          # size in bytes
         print("File:", filename)
         print("Path:", path)
         print("Size:", size, "bytes")
@@ -166,9 +169,8 @@ def show_file(course, filename):
         print("Permission denied:", filename)
 
 
-
 def open_file(course, filename):
-    """Opens a file of the course folder with the default program of the computer."""
+    """Opens a file with the default program of the computer (used by the menu in main.py)."""
     # only names that are really in the folder are opened
     if filename not in get_course_files(course):
         print("File not found:", filename)
@@ -179,6 +181,8 @@ def open_file(course, filename):
     else:
         os.system(f'open "{path}"')           # Mac
 
+
+# quick test: runs only with "python materials.py", not when another file imports it
 if __name__ == "__main__":
     print(find_course("COE203_Advanced_Python_W2.pdf"))   # python
     print(find_course("DSA-week4.pptx"))                  # dsa
