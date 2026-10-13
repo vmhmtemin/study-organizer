@@ -12,7 +12,7 @@ Developed a priority system that organizes study tasks based on difficulty, dead
 * **Task Sorting:** Orders pending tasks by priority, followed by overdue and completed tasks.
 * **Task Comparison:** Uses deadline proximity to break ties between tasks with equal scores.
 
-### Python Concepts Used
+### Concepts Used
 * **Dictionaries:** Stores difficulty scores; `DIFFICULTY`
 * **Functions:**  Divide the logic into reusable parts;`days_left()`, `get_score()`, `is_better()`, and `order_tasks()`
 * **Conditional Statements:** `if`, `elif`, and `else`
@@ -32,7 +32,7 @@ Developed a command-line interface that allows users to manage study tasks and a
 * **Material Access:** Supports importing, listing, and opening study materials.
 * **Data Persistence:** Saves task changes and loads existing tasks.
 
-### Python Concepts Used
+### Concepts Used
 * **Modules and Imports:** Imports functions from `main`, `materials`, `priority`, `storage`, and `tasks`.
 * **Functions:** `main()`, `get_task()`, and `add_command()` organize CLI operations.
 * **`argparse`:** Defines commands and optional arguments using `ArgumentParser()` and `add_argument()`.
