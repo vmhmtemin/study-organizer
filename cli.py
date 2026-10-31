@@ -3,16 +3,19 @@
 #   python cli.py add --title Lab 2 --course python --deadline 2026-12-18 --difficulty hard
 #   python cli.py list
 #   python cli.py details --number 1
+#   python cli.py remind
+#   python cli.py monitor
 import argparse
 
 from main import account_menu, run_menu
 from materials import import_files, make_folders, show_file, show_materials
-from priority import order_tasks                 # import the necessary modules and functions from other files in the project
-from storage import load_tasks, save_tasks
-from tasks import (check_file, check_number, check_task, new_task,
+from priority import needs_reminder, order_tasks                 # import the necessary modules and functions from other files in the project
+from storage import load_reminded, load_tasks, save_reminded, save_tasks, task_key
+from web import SOURCE, run_monitor
+from tasks import (check_file, check_number, check_task, make_reminder, new_task,
                    show_details, show_tasks)
 
-COMMANDS = ["add", "list", "details", "done", "delete", "open", "import", "materials", "menu"]  # store all available commands in a list
+COMMANDS = ["add", "list", "details", "done", "delete", "open", "import", "materials", "remind", "monitor", "menu"]  # store all available commands in a list
 
 
 def get_task(tasks, text):
@@ -51,6 +54,23 @@ def add_command(args, tasks):
     print("Task added:", title)
 
 
+def remind_command(tasks):
+    reminded = load_reminded()            # keys of the tasks we already reminded about
+    new_count = 0
+    for task in order_tasks(tasks):
+        if not needs_reminder(task):
+            continue
+        key = task_key(task)
+        if key in reminded:
+            continue                      # same state again is not news
+        print(make_reminder(task))
+        reminded.append(key)              # remember it, so the next run stays quiet
+        new_count += 1
+    save_reminded(reminded)
+    if new_count == 0:
+        print("No new reminders.")
+
+
 def main():
     make_folders()
 
@@ -64,6 +84,7 @@ def main():
     parser.add_argument("--deadline", help="YYYY-MM-DD, example 2026-12-18 (add)")
     parser.add_argument("--difficulty", help="easy, medium or hard (add)")
     parser.add_argument("--file", help="name of a file in materials/<course>/ (add, optional)")
+    parser.add_argument("--source", help="your own saved announcements file, .json (monitor, optional)")
     args = parser.parse_args()
 
     tasks = load_tasks() # read the arguments entered by the user
@@ -80,6 +101,10 @@ def main():
         import_files()
     elif args.command == "materials":
         show_materials()
+    elif args.command == "remind":
+        remind_command(tasks)
+    elif args.command == "monitor":
+        run_monitor((args.source or SOURCE).strip(), tasks)
     else:
         # details, done and open all need a task number
         task = get_task(tasks, (args.number or "").strip())

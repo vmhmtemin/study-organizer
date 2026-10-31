@@ -5,3 +5,5 @@ inbox/
 materials/
 users.txt
 .DS_Store
+reminded.txt
+seen_deadlines.txt

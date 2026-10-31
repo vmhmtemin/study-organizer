@@ -49,6 +49,50 @@ def load_tasks(filename="tasks.txt"):
     return tasks
 
 
+def task_key(task):
+    """One text that identifies a task. A new deadline gives a new key, so it is reminded again."""
+    return "|".join([task["title"], task["course"], task["deadline"]])
+
+
+def save_reminded(keys, filename="reminded.txt"):
+    # One key per line: the tasks we already reminded the student about.
+    with open(filename, "w", encoding="utf-8") as file:
+        for key in keys:
+            file.write(key + "\n")
+
+
+def load_reminded(filename="reminded.txt"):
+    keys = []
+    try:
+        with open(filename, encoding="utf-8") as file:
+            for line in file:
+                if line.strip() != "":
+                    keys.append(line.strip())
+    except FileNotFoundError:
+        pass  # first run: nothing was reminded yet
+    return keys
+
+
+def save_deadlines(deadlines, filename="seen_deadlines.txt"):
+    # One line per announcement: id|deadline
+    with open(filename, "w", encoding="utf-8") as file:
+        for record_id in deadlines:
+            file.write(record_id + "|" + deadlines[record_id] + "\n")
+
+
+def load_deadlines(filename="seen_deadlines.txt"):
+    deadlines = {}
+    try:
+        with open(filename, encoding="utf-8") as file:
+            for line in file:
+                parts = line.strip().split("|")
+                if len(parts) == 2:
+                    deadlines[parts[0]] = parts[1]
+    except FileNotFoundError:
+        pass  # first scan: nothing is known yet
+    return deadlines
+
+
 # This block runs only when the file is executed directly
 # (not when it is imported from another file). It is meant as a quick test.
 if __name__ == "__main__":

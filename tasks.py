@@ -1,9 +1,9 @@
 # tasks.py - Creates tasks, checks user inputs, and displays tasks
-from datetime import date
+from datetime import datetime
 
 # Import course information and priority functions from other files
 from materials import COURSES, get_course_files
-from priority import DIFFICULTY, days_left, get_score
+from priority import DIFFICULTY, days_left, get_score, needs_reminder
 
 # Characters that cannot be used in task titles
 BAD_TITLE_CHARACTERS = "|\t\r\n"      # "|" separates the fields in tasks.txt
@@ -64,7 +64,7 @@ def check_date(text):
     if len(text) != 10 or text[4] != "-" or text[7] != "-":  # Check the date format using string indexes
         return "Invalid date. " + hint
     try:
-        deadline = date.fromisoformat(text)     # fails for days that do not exist
+        deadline = datetime.fromisoformat(text)     # fails for days that do not exist
     except ValueError: # Handle invalid dates
         return "Invalid date. " + hint
     if deadline.year < 2000 or deadline.year > 2100:
@@ -95,13 +95,33 @@ def check_task(title, course, deadline, difficulty):
 
 # ---- showing tasks ----
 
+def due_text(days):
+    """TODAY, tomorrow, or in N days: the same words in the list and in the reminder."""
+    if days == 0:
+        return "TODAY"
+    if days == 1:
+        return "tomorrow"
+    return f"in {days} days"
+
+
 def describe(task):
     if task["done"]:  # Access the completion status from the dictionary
         return "done"
     score = get_score(task) # Calculate the task priority score
     if score == "OVERDUE":
         return "OVERDUE"
-    return f"score {score}, {days_left(task['deadline'])} days left"
+    days = days_left(task['deadline'])
+    text = f"score {score}, {days} days left"
+    if needs_reminder(task):
+        text += f"  >> REMINDER: due {due_text(days)}"   # shown in list and details
+    return text
+
+
+def make_reminder(task):
+    """A message that says what is due, when, and what to do."""
+    when = due_text(days_left(task["deadline"]))
+    return (f"REMINDER: {task['title']} ({task['course']}) is due {when} "
+            f"({task['deadline']}). Difficulty: {task['difficulty']}. Start now.")
 
 
 # Display all tasks as a numbered list
