@@ -1,86 +1,195 @@
-# StudyCompass (Study Organizer)
+# StudyCompass – Study Organizer
+A command-line study management application designed to help students organize academic tasks, prioritize deadlines, and manage study materials efficiently.
 
-## Problem
-Students often struggle to manage multiple academic tasks, keep track of deadlines, and decide which tasks to complete first. A close, difficult task can easily be forgotten behind an easier one, and a missed deadline is usually noticed too late. Organizing study materials can also be time-consuming: slides, PDFs, photos and recordings pile up in one folder with random names, so finding the right file for the right course takes time. This makes it difficult to maintain an efficient and organized study routine.
+## Project Overview
+Students often need to manage multiple assignments, exams, deadlines, and course materials simultaneously. StudyCompass is a Python-based command-line application that brings these academic responsibilities together in one organized system.The application allows users to create accounts, manage academic tasks, calculate task priorities automatically, track deadlines, and organize study materials by course.
 
-## Solution
-StudyCompass is a task management and study material organization system.
-- **Tasks:** students add tasks with a title, course, deadline and difficulty level (easy, medium, hard).
-- **Priority:** every task gets a priority score, and the list is sorted so the most important task is always first.
-- **Deadlines:** the application tracks deadlines and shows the number of days remaining for each task. Overdue tasks are clearly marked as `OVERDUE`, so important deadlines are not missed.
-- **Study materials:** files dropped in `inbox/` are moved automatically into the right course folder (`materials/<course>/`), and a task can be linked to a file that can be opened from the menu.
+## Problems 
+Students often struggle to manage multiple assignments, exams, and deadlines while keeping their course materials organized. Tracking different tasks manually can lead to missed deadlines, poor time management, and difficulty identifying which tasks require immediate attention. Additionally, study materials stored in different locations can make it harder to maintain an organized study routine and quickly access the required resources.
 
-Everything is managed in one place, which makes files easier to access and academic responsibilities easier to manage.
+## Solutions
+StudyCompass addresses these challenges by providing a centralized command-line study management system. It allows students to create and track academic tasks, automatically calculate priorities based on task difficulty and deadline urgency, and organize study materials into course-specific folders. By combining task management, deadline tracking, and material organization, StudyCompass helps students manage their academic responsibilities more efficiently.
 
-## How to run
-Python 3 is needed. Open a terminal in the project folder, then:
+## Key Features
+
+### 1. Task Management
+* Add tasks with a title, course, deadline, and difficulty level.
+* View all tasks in an organized list.
+* Display detailed information about individual tasks.
+* Mark completed tasks as done.
+* Delete tasks when they are no longer needed.
+
+### 2. Priority Calculation
+* Automatically calculate task priority scores.
+* Consider both task difficulty and deadline urgency.
+* Sort tasks from highest to lowest priority.
+* Display overdue tasks with an `OVERDUE` label.
+
+### 3. Deadline Tracking
+* Calculate the remaining days until each deadline.
+* Identify approaching deadlines.
+* Automatically detect overdue tasks.
+
+### 4. Study Material Organization
+* Import files through the `inbox/` folder.
+* Organize materials into course-specific folders.
+* Support different file types, including documents, images, presentations, and audio files.
+* View imported materials.
+* Connect study files to tasks where supported.
+
+### 5. User Authentication
+* Create a user account through the sign-up system.
+* Log in using a username and password.
+* Validate account information.
+* Limit login attempts.
+
+## Technologies Used
+* Python 3
+* Object-Oriented Programming concepts
+* Argparse
+* File Handling
+* Date and Time Operations
+
+## Project Structure
+
+| File / Folder    | Description                                   |
+| ---------------- | --------------------------------------------- |
+| `main.py`        | Main menu, sign-up, and login operations      |
+| `cli.py`         | Command-line interface and command management |
+| `accounts.py`    | User authentication and password handling     |
+| `tasks.py`       | Task creation, validation, and display        |
+| `priority.py`    | Priority score calculation and task sorting   |
+| `materials.py`   | Study material importing and organization     |
+| `storage.py`     | Task data storage and retrieval               |
+| `contributions/` | Individual group member contributions         |
+
+The following folders and files are used by the application:
+
+* `inbox/` – Files waiting to be imported.
+* `materials/` – Imported study materials organized by course.
+* `tasks.txt` – Stored task information.
+* `users.txt` – User account information.
+
+## How to Use
+
+### Starting the Application
+
+```bash
+python main.py
 ```
-python main.py                  # menu (asks for login first)
-python cli.py <command> ...     # one command
-python cli.py -h                # help
-```
-On a Mac, use `python3` instead of `python`.
 
-## Uploading Files
-1. Copy your study materials into the `inbox` folder.
-2. Run `python cli.py import` to import the files.
-3. Run `python cli.py materials` to view your uploaded materials.
+On the first run, create an account using the Sign Up option. Then log in to access the main menu.
 
-**Example:**
+### Command-Line Operations
+
+You can also use individual commands through `cli.py`.
+
+| Command     | Description                        |
+| ----------- | ---------------------------------- |
+| `add`       | Add a new task                     |
+| `list`      | Display tasks sorted by priority   |
+| `details`   | View task details                  |
+| `done`      | Mark a task as completed           |
+| `delete`    | Delete a task                      |
+| `open`      | Access associated file information |
+| `import`    | Import study materials             |
+| `materials` | Display imported materials         |
+| `menu`      | Open the application menu          |
+
+### Example Commands
+
+Add a task:
+
+```bash
+python cli.py add --title Lab 2 --course python --deadline 2026-12-18 --difficulty hard
 ```
-python cli.py add --title Lab 2 --course python --deadline 2026-12-18 --difficulty hard --file lab2.pdf
-python cli.py list              # tasks, most important first
+
+Display tasks:
+
+```bash
+python cli.py list
+```
+
+View task details:
+
+```bash
 python cli.py details --number 1
-python cli.py done --number 1   # mark task 1 as done
-python cli.py delete --number 1 # delete task 1 (asks y/n first)
-python cli.py import            # move files from inbox/ to materials/<course>/
-python cli.py materials         # show the stored files
-python cli.py open --number 1   # show the path and size of task 1's file
-python cli.py menu              # log in and open the full menu
 ```
-Task numbers come from `list`. After `done` the task moves to the end, so run `list` again.
-`inbox/`, `materials/` and `tasks.txt` are created automatically; `users.txt` is created at the first sign up.
 
-**Flow:** `add` checks the input and saves the task → `list` calculates days left and the score of every task and sorts them → `import` sorts new files into course folders → the menu (option 3) finds the task's file and opens it with the computer's default program.
+Mark a task as completed:
 
-## First run and login
-Run `python main.py`. On the first run choose **Sign up** to create an account, then **Log in**.
-The task menu opens after a successful login. You have 4 attempts.
-`python cli.py menu` uses the same login. The one-line CLI commands work on the local `tasks.txt` without a login.
+```bash
+python cli.py done --number 1
+```
 
-Account rules:
-- The username cannot be empty or contain `|`, and must not be taken already.
-- The password must be at least 8 characters and contain both letters and numbers.
+Delete a task:
 
-## Passwords
-Passwords are never saved. `users.txt` only stores `username|hash`, for example `buse|895676405`.
-- **Hash:** `simple_hash()` in `accounts.py` starts from 7 and, for every character, does `h = (h * 31 + ord(character)) % 1000000007`. Because of the multiplication, the order of the characters matters ("asd" and "dsa" give different numbers).
-- **Salt:** the username (lower case) is put in front of the password before hashing, so two users with the same password get different hashes.
-- **Login:** the typed password is hashed the same way and compared with the saved hash.
-- **Limitation:** this is a simple hash made with class topics; short inputs can be reversed. Real systems use salted, slow hash functions.
+```bash
+python cli.py delete --number 1
+```
 
-## Logic
-- `score = difficulty points (easy 1, medium 3, hard 5) + urgency * 2`
-- Urgency from days left: 0-1 → 5, 2-3 → 4, 4-7 → 3, 8-14 → 2, more → 1. Passed deadline → `OVERDUE`.
-- Same score → the task with the closer deadline comes first.
-- Wrong input prints a warning instead of crashing.
-- File names are checked against the course keywords in order; the first match decides the course. No match → `materials/unsorted/`.
-- Unsupported types, unsafe names and symbolic links are skipped. Files are never overwritten.
-- Opening a file: the menu opens it with the default program (`open_file`); `cli.py open` only shows its path and size (`show_file`).
+## Task Priority System
+StudyCompass calculates task priorities using difficulty and deadline urgency.
 
-## Files
-| File | Job |
-|---|---|
-| `main.py` | menu, sign up and login |
-| `cli.py` | argparse commands |
-| `accounts.py` | password hashing and password checks |
-| `tasks.py` | task dictionary, input checks, showing tasks |
-| `priority.py` | days left, score, ordering |
-| `materials.py` | import, list and open study files |
-| `storage.py` | save / load `tasks.txt` |
-| `contributions/` | what each group member did |
+**Difficulty Points:**
 
-Created while running (not in Git): `inbox/` new files to import · `materials/` imported files by course · `tasks.txt` tasks · `users.txt` accounts.
+| Difficulty | Points |
+| ---------- | -----: |
+| Easy       |      1 |
+| Medium     |      3 |
+| Hard       |      5 |
 
-## Not from the slides
-`datetime.date` (today's date, `date.fromisoformat` for deadlines) · `os.startfile` / `os.system` / `os.name` (open a file on Windows or Mac) · `ord()` (character → number for the hash) · `str.isalpha()` / `str.isdigit()` (password check) · `rstrip()` (reading `users.txt`) · `EOFError` / `KeyboardInterrupt` (leaving the program with Ctrl+C / Ctrl+D).
+**Deadline Urgency:**
+
+| Days Remaining    | Urgency |
+| ----------------- | ------: |
+| 0–1 days          |       5 |
+| 2–3 days          |       4 |
+| 4–7 days          |       3 |
+| 8–14 days         |       2 |
+| More than 14 days |       1 |
+
+**Priority Formula:**
+
+`Priority Score = Difficulty Points + (Urgency × 2)`
+
+Tasks with higher scores appear first. Overdue tasks are identified separately.
+
+## Study Material Management
+Study materials can be imported by placing files inside the `inbox/` folder.
+
+Run:
+
+```bash
+python cli.py import
+```
+
+Imported files are organized into course folders:
+
+```text
+materials/
+    python/
+    dsa/
+    diffeq/
+    unsorted/
+```
+
+To display imported materials:
+
+```bash
+python cli.py materials
+```
+
+## User Authentication
+Users can create accounts and log in through the application menu.
+
+Account features include:
+* Username validation.
+* Unique username checking.
+* Password validation.
+* Limited login attempts.
+* Password hashing.
+
+The application stores password hashes rather than plain-text passwords.
+
+
